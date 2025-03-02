@@ -1,0 +1,23 @@
+# Ignore environment files
+.env
+
+# Ignore compiled binaries
+*.exe
+*.out
+*.o
+*.so
+
+# Ignore build artifacts
+/build/
+/bin/
+
+# Ignore logs and cache
+*.log
+/tmp/
+node_modules/
+.DS_Store
+
+# Ignore Go-related files
+/go.sum
+/go.mod
+
