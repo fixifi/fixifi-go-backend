@@ -1,10 +1,12 @@
-package postgres
+package database
 
 import (
 	"fmt"
 	"log"
-	"github.com/fixifi/fixifi-go-backend/config"
 	"log/slog"
+
+	"github.com/fixifi/fixifi-go-backend/config"
+	"github.com/fixifi/fixifi-go-backend/handlers"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -14,13 +16,11 @@ type Postgres struct {
 	Db *gorm.DB
 }
 
-
 func ConnectToDatabase(cfg *config.Config) *Postgres {
 	dsnWithoutDB := fmt.Sprintf(
 		"host=%s port=%s user=%s password=%s dbname=postgres sslmode=%s",
 		cfg.Host, cfg.Port, cfg.DbUsername, cfg.DbPassword, cfg.DbSslMode,
 	)
-	
 
 	// Connect to PostgreSQL (without database)
 	tempDB, err := gorm.Open(postgres.Open(dsnWithoutDB), &gorm.Config{})
@@ -41,7 +41,7 @@ func ConnectToDatabase(cfg *config.Config) *Postgres {
 		if err := tempDB.Exec(createDBSQL).Error; err != nil {
 			log.Fatalf("Failed to create database %s: %v", cfg.DbName, err)
 		}
-		slog.Info("Database created successfully:", cfg.DbName)
+		slog.Info("Database created successfully !")
 	} else {
 		slog.Info("Database already exists, proceeding with connection.")
 	}
@@ -61,5 +61,14 @@ func ConnectToDatabase(cfg *config.Config) *Postgres {
 	}
 
 	slog.Info("Database connected successfully!")
-	return &Postgres{Db: db}
+	postgres := Postgres{Db: db}
+
+	var tables []interface{}
+	tables = append(tables, &handlers.Consumer{})
+
+	err = postgres.CreateAllTables(tables)
+	if err != nil {
+		log.Fatalf("Failed to migrate tables: %v", err)
+	}
+	return &postgres
 }

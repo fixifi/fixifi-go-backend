@@ -2,14 +2,15 @@ package api
 
 import (
 	"github.com/fixifi/fixifi-go-backend/handlers"
-	"github.com/gofiber/fiber/v3"
 )
 
 //routes
 
-
-func SetupRoute(app *fiber.App) {
-	app.Get("/", handlers.WellComeHandler)
+func SetupRoute(mainHandler *handlers.MainHandler) {
+	mainHandler.App.Get("/", mainHandler.WellComeHandler())
 	// auth:=app.Group("/api/auth/")
 	// auth.Get("/",)
+	account := mainHandler.App.Group("/api/account")
+	account.Post("/consumer/create", mainHandler.CreateConsumer())
+	// account.Post("/provider/create", mainHandler.CreateProvider())
 }
