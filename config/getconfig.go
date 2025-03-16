@@ -7,12 +7,14 @@ import (
 )
 
 type Config struct {
-	Port       string
+	
 	Host       string
+	Port       string
 	DbUsername string
 	DbPassword string
 	DbName     string
 	DbSslMode  string
+	
 }
 
 func GetConfig() *Config {

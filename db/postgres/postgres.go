@@ -6,7 +6,7 @@ import (
 	"log/slog"
 
 	"github.com/fixifi/fixifi-go-backend/config"
-	"github.com/fixifi/fixifi-go-backend/handlers"
+	"github.com/fixifi/fixifi-go-backend/data/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -64,7 +64,16 @@ func ConnectToDatabase(cfg *config.Config) *Postgres {
 	postgres := Postgres{Db: db}
 
 	var tables []interface{}
-	tables = append(tables, &handlers.Consumer{})
+	tables = append(tables, &models.Consumer{})
+	tables = append(tables, &models.Category{})
+	tables = append(tables, &models.Address{})
+	tables = append(tables, &models.Category{})
+	tables = append(tables, &models.Order{})
+	tables = append(tables, &models.OrderImage{})
+	tables = append(tables, &models.Review{})
+	tables = append(tables, &models.Provider{})
+	tables = append(tables, &models.Equipment{})
+	tables = append(tables, &models.Provider{})
 
 	err = postgres.CreateAllTables(tables)
 	if err != nil {

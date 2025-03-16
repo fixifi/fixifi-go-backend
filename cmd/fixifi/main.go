@@ -11,8 +11,10 @@ import (
 	"time"
 
 	"github.com/fixifi/fixifi-go-backend/cmd/api"
+	"github.com/fixifi/fixifi-go-backend/cmd/initconst"
+
 	"github.com/fixifi/fixifi-go-backend/config"
-	 "github.com/fixifi/fixifi-go-backend/db/postgres"
+	database "github.com/fixifi/fixifi-go-backend/db/postgres"
 	"github.com/fixifi/fixifi-go-backend/handlers"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v3"
@@ -32,10 +34,13 @@ func main() {
 		Cfg:      cfg,
 	}
 
+	// Initialize predefined categories
+	// initconst.MustInit(&mainHandler)
+	initconst.MustInit(&mainHandler)
+
 	api.SetupRoute(&mainHandler)
 
-
-	// -------->Graceful shutdown 
+	// -------->Graceful shutdown
 	ok := make(chan os.Signal, 1)
 	signal.Notify(ok, os.Interrupt, syscall.SIGINT, syscall.SIGABRT)
 	addr := fmt.Sprintf(":%d", 8055)
